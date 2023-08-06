@@ -8,7 +8,7 @@ export function Square({ value, onSquareClick }) {
   );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
+function Board({ xIsNext, squares, onPlay,currentMove }) {
   let status;
   function calculateWinner(squares) {
     const lines = [
@@ -38,7 +38,10 @@ function Board({ xIsNext, squares, onPlay }) {
   const winner = calculateWinner(squares);
   if (winner) {
     status = "Winner is :  Player " + winner;
-  } else {
+  } else if(currentMove>=9){
+    status = "Game Tie..!!"
+  }
+  else{
     status = "Next Move : " + (xIsNext ? "X" : "O");
   }
 
@@ -53,6 +56,7 @@ function Board({ xIsNext, squares, onPlay }) {
     // console.log(squares);
     onPlay(nextSquares);
   }
+
   return (
     <div>
       <div className="status">{status}</div>
@@ -76,6 +80,7 @@ function Board({ xIsNext, squares, onPlay }) {
 }
 
 export default function Game() {
+
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -85,6 +90,7 @@ export default function Game() {
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
+
   function jumpTo(nextMove) {
     setCurrentMove(nextMove);
   }
@@ -106,7 +112,7 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game=board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} currentMove={currentMove} />
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
